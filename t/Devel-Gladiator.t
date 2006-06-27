@@ -1,34 +1,41 @@
-# Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl Devel-Gladiator.t'
+#!/usr/bin/perl
 
-#########################
-
-# change 'tests => 1' to 'tests => last_test_to_print';
-
-use Test::More tests => 1;
-BEGIN { use_ok('Devel::Gladiator') };
 use strict;
-#########################
-
-# Insert your test code below, the Test::More module is use()ed here so read
-# its man page ( perldoc Test::More ) for help writing this test script.
-
+use Test::More tests => 6;
+use Scalar::Util qw(weaken);
+BEGIN { use_ok('Devel::Gladiator') };
 use Devel::Peek;
-my %hash;
-for (1..10) {
-        $hash{$_}++;
-}
 
+my $found;
 my $foo = "blah";
 
 my $array = Devel::Gladiator::walk_arena();
+ok($array, "walk returned");
+is(ref $array, "ARRAY", ".. with an array");
+$found = undef;
 foreach my $value (@$array) {
-        next unless $value == \$foo;
-#        next unless(ref($value) eq 'SCALAR');
-#        Dump($value);
-#        print $value . "\n";
+    next unless $value == \$foo;
+    $found = $value;
 }
-Dump($array,1);
+is($$found, $foo, 'found foo');
 $array = undef;
 
-#Dump($foo);
+# make a circular reference
+my $ptr;
+{
+    my $foo = ["missing!"];
+    my $bar = \$foo;
+    $foo->[1] = $bar;
+    $ptr = $foo;
+    weaken($ptr);
+}
+ok($ptr, "foo went missing");
+
+$array = Devel::Gladiator::walk_arena();
+$found = undef;
+foreach my $value (@$array) {
+    next unless $value == $ptr;
+    $found = $value;
+}
+is($found->[0], "missing!", "found missing item");
+$array = undef;
