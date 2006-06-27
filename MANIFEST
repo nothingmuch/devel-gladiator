@@ -1,0 +1,9 @@
+Changes
+Gladiator.xs
+Makefile.PL
+MANIFEST
+ppport.h
+README
+t/Devel-Gladiator.t
+lib/Devel/Gladiator.pm
+META.yml                                 Module meta-data (added by MakeMaker)
