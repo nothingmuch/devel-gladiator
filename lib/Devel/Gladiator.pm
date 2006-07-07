@@ -29,6 +29,29 @@ our $VERSION = '0.00_01';
 our $XS_VERSION = $VERSION;
 $VERSION = eval $VERSION;  # see L<perlmodstyle>
 
+sub arena_ref_counts {
+    my $all = Devel::Gladiator::walk_arena();
+    my %ct;
+    foreach my $it (@$all) {
+        $ct{ref $it}++;
+        if (ref $it eq "REF") {
+            $ct{"REF-" . ref $$it}++;
+        }
+    }
+    $all = undef;
+    return \%ct;
+}
+
+sub arena_table {
+    my $ct = arena_ref_counts();
+    my $ret;
+    $ret .= "ARENA COUNTS:\n";
+    foreach my $k (sort {$ct->{$b} <=> $ct->{$a}} keys %$ct) {
+        $ret .= sprintf(" %4d $k\n", $ct->{$k});
+    }
+    return $ret;
+}
+
 require XSLoader;
 XSLoader::load('Devel::Gladiator', $XS_VERSION);
 
