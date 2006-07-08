@@ -5,13 +5,13 @@
 #include "ppport.h"
 
 
-MODULE = Devel::Gladiator		PACKAGE = Devel::Gladiator		
+MODULE = Devel::Gladiator		PACKAGE = Devel::Gladiator
 
 
 
 SV*
 walk_arena()
-PPCODE: 
+PPCODE:
 {
   SV* sva;
   I32 visited = 0;
@@ -52,6 +52,6 @@ PPCODE:
   sv_2mortal(ST(0));
 
   //sv_dump(ST(0));
-  XSRETURN(1); 
+  XSRETURN(1);
 }
 
