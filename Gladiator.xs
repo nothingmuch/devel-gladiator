@@ -18,16 +18,30 @@ PPCODE:
   AV* av = newAV();
   for (sva = PL_sv_arenaroot; sva; sva = (SV*)SvANY(sva)) {
     register const SV * const svend = &sva[SvREFCNT(sva)];
-    register SV* sv;
-    for (sv = sva + 1; sv < svend; ++sv) {
-      if (SvTYPE(sv) != SVTYPEMASK
-          && SvREFCNT(sv)
-          && sv != (SV*)av
+    SV* svi;
+    for (svi = sva + 1; svi < svend; ++svi) {
+      if (SvTYPE(svi) != SVTYPEMASK
+          && SvREFCNT(svi)
+          && svi != (SV*)av
           )
         {
+          /** skip pads, they have a PVAV as their first element inside a PVAV **/
+          if (SvTYPE(svi) == SVt_PVAV &&
+              av_len( (AV*) svi) != -1) {
+            SV** first = AvARRAY((AV*)svi);
+            if (first && *first && SvTYPE(*first) == SVt_PVAV) {
+              continue;
+            }
+            if (first && *first && SvTYPE(*first) == SVt_PVCV) {
+              continue;
+            }
+          }
+          if (SvTYPE(svi) == SVt_PVCV && CvROOT((CV*)svi) == 0) {
+            continue;
+          }
           ++visited;
-          av_push(av,sv);
-          SvREFCNT_inc(sv);
+          av_push(av,svi);
+          SvREFCNT_inc(svi);
         }
     }
   }
