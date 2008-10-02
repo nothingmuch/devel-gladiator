@@ -2,7 +2,7 @@
 
 use strict;
 use Test::More tests => 6;
-use Scalar::Util qw(weaken);
+use Scalar::Util qw(weaken refaddr);
 BEGIN { use_ok('Devel::Gladiator') };
 use Devel::Peek;
 
@@ -14,7 +14,7 @@ ok($array, "walk returned");
 is(ref $array, "ARRAY", ".. with an array");
 $found = undef;
 foreach my $value (@$array) {
-    next unless $value == \$foo;
+    next unless refaddr($value) == refaddr(\$foo);
     $found = $value;
 }
 is($$found, $foo, 'found foo');
@@ -34,7 +34,7 @@ ok($ptr, "foo went missing");
 $array = Devel::Gladiator::walk_arena();
 $found = undef;
 foreach my $value (@$array) {
-    next unless $value == $ptr;
+    next unless refaddr($value) == refaddr($ptr);
     $found = $value;
 }
 is($found->[0], "missing!", "found missing item");
