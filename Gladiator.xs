@@ -65,7 +65,7 @@ PPCODE:
   ST(0) = newRV_noinc((SV*)av);
   sv_2mortal(ST(0));
 
-  //sv_dump(ST(0));
+  /*sv_dump(ST(0)); */
   XSRETURN(1);
 }
 
