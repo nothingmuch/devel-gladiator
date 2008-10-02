@@ -21,7 +21,7 @@ our %EXPORT_TAGS = ( 'all' => [ qw(
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '0.00_01';
+our $VERSION = '0.01';
 our $XS_VERSION = $VERSION;
 $VERSION = eval $VERSION;  # see L<perlmodstyle>
 
