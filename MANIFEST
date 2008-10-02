@@ -1,9 +1,11 @@
 Changes
 Gladiator.xs
+lib/Devel/Gladiator.pm
 Makefile.PL
 MANIFEST
+MANIFEST.SKIP
+META.yml			Module meta-data (added by MakeMaker)
 ppport.h
 README
 t/Devel-Gladiator.t
-lib/Devel/Gladiator.pm
-META.yml                                 Module meta-data (added by MakeMaker)
+t/padwalker.t
