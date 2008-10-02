@@ -41,7 +41,7 @@ my $sub1 = blah();
         my $peek_sub = peek_sub($value);
 
         is(${$peek_sub->{'$foo'}}, "foo");
-        is(${$peek_sub->{'$outer'}}, undef);
+        is(${$peek_sub->{'$outer'}}, "outer"); # used to be testing for 'undef', but it's a closure var, should be refcnt = 2 (one in Dummy, one in sub blah)
         is(${$peek_sub->{'$bar'}}, "bar");
         is($peek_sub->{'%bar'}->{baz}, "baz");
         is($peek_sub->{'%bar'}->{foz}, "foz");
